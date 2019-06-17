@@ -28,7 +28,7 @@ The target platforms we chose to go with for our game is Android and iOS platfor
 
 **Simple Flow Board**
 
-![Alt text](Flowboard.png?raw=true "Flowboard")
+![Flowboard](FlowBoard.png)
  
 **Game Modes:**
 
