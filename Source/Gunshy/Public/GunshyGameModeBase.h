@@ -12,6 +12,9 @@
 UCLASS()
 class GUNSHY_API AGunshyGameModeBase : public AGameModeBase
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+#if PLATFORM_DESKTOP || PLATFORM_WINDOWS || PLATFORM_APPLE
+    virtual void BeginPlay() override;
+#endif
 };
