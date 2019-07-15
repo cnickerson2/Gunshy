@@ -7,6 +7,7 @@
 #include "PlayerPawn.generated.h"
 
 #pragma region Forward Declarations
+class ATile;
 class UCameraComponent;
 class UInputComponent;
 #pragma endregion Forward Declarations
@@ -17,7 +18,7 @@ class GUNSHY_API APlayerPawn : public APawn
 	GENERATED_BODY()
 #pragma region Fields and Properties
 protected:
-    float const DISTANCE_FROM_GROUND = 100.0f;
+    // How far down does the raycast go from the point on the camera that was selected
     float const RAY_CAST_DISTANCE = 1000.0f;
 
     // Default Player Camera
@@ -35,6 +36,11 @@ public:
 
 protected:
     // Attempt to select a tile
-    virtual void OnSelect();
+    virtual void SelectAtClick();
+    // Deproject the Mouse Position of the Player Controller and cast a ray downwards towards the objects below
+    bool RaycastFromMousePosition(const APlayerController * const OutPlayerController, FHitResult& OutHitResult) const;
+    // Tell the tile that is passed in that it was selected
+    void InformTileOfSelection(ATile * const OutHitTile) const;
+
 #pragma endregion Methods
 };
