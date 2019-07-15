@@ -3,6 +3,7 @@
 
 #include "GunshyGameModeBase.h"
 #include "GameFramework/PlayerController.h"
+#include "Engine/World.h"
 
 #if PLATFORM_DESKTOP || PLATFORM_WINDOWS || PLATFORM_APPLE
 void AGunshyGameModeBase::BeginPlay()
