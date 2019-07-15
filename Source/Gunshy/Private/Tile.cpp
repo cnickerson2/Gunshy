@@ -7,3 +7,22 @@ void ATile::SetSelected()
 {
 
 }
+
+bool ATile::IsAbleToBeSelected() const
+{
+    if (SurroundingTiles.TileOnTop)
+    {
+        return false;
+    }
+
+    if (SurroundingTiles.TileToTheLeft == nullptr || SurroundingTiles.TileToTheRight == nullptr)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
