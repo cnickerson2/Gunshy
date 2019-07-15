@@ -17,8 +17,11 @@ class GUNSHY_API APlayerPawn : public APawn
 	GENERATED_BODY()
 #pragma region Fields and Properties
 protected:
+    float const DISTANCE_FROM_GROUND = 100.0f;
+    float const RAY_CAST_DISTANCE = 1000.0f;
+
     // Default Player Camera
-    UPROPERTY(Category = "Camera", BlueprintReadOnly)
+    UPROPERTY(Category = "Camera", EditAnywhere)
         UCameraComponent * PlayerCamera = nullptr; // TODO: Figure out the bug here where VisibleAnywhere is allowing this to be edited...
 #pragma endregion Fields and Properties
 
@@ -32,6 +35,6 @@ public:
 
 protected:
     // Attempt to select a tile
-    virtual void Select();
+    virtual void OnSelect();
 #pragma endregion Methods
 };
