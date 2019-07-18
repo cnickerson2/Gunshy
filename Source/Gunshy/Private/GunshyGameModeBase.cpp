@@ -9,7 +9,6 @@
 void AGunshyGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
-    FConstPlayerControllerIterator PlayerControllerIterator = GetWorld()->GetPlayerControllerIterator();
 
     for (FConstPlayerControllerIterator PlayerControllerIterator = GetWorld()->GetPlayerControllerIterator(); PlayerControllerIterator; ++PlayerControllerIterator)
     {
