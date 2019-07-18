@@ -6,6 +6,9 @@
 #include "GameFramework/GameModeBase.h"
 #include "GunshyGameModeBase.generated.h"
 
+/** Forward Declarations */
+class UTilePool;
+
 /**
  * 
  */
@@ -14,7 +17,13 @@ class GUNSHY_API AGunshyGameModeBase : public AGameModeBase
 {
     GENERATED_BODY()
 
-#if PLATFORM_DESKTOP || PLATFORM_WINDOWS || PLATFORM_APPLE
+    AGunshyGameModeBase();
+
     virtual void BeginPlay() override;
-#endif
+
+protected:
+    UPROPERTY(EditDefaultsOnly, Category="Tile Pool")
+    UTilePool* TilePool = nullptr;
+    const uint8 TILES_TO_SPAWN = 144;
+
 };
