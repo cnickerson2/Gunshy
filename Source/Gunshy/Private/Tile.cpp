@@ -8,6 +8,11 @@ void ATile::SetSelected()
 
 }
 
+void ATile::SetPattern(ETilePattern NewPattern)
+{
+    TilePattern = NewPattern;
+}
+
 bool ATile::IsAbleToBeSelected() const
 {
     if (SurroundingTiles.TileOnTop)
