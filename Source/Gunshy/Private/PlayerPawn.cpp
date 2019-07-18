@@ -69,5 +69,5 @@ bool APlayerPawn::RaycastFromMousePosition(const APlayerController * const OutPl
 
 void APlayerPawn::InformTileOfSelection(ATile * const OutHitTile) const
 {
-    OutHitTile->SetSelected();
+    OutHitTile->SetAsSelected();
 }

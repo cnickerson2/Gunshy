@@ -49,7 +49,7 @@ enum class ETilePattern : uint8
 /**
  * A collection of the tiles that are surrounding this object
  */
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FSurroundingTiles
 {
     GENERATED_USTRUCT_BODY()
@@ -65,16 +65,26 @@ struct FSurroundingTiles
 UCLASS()
 class GUNSHY_API ATile : public AStaticMeshActor
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 #pragma region Fields and Properties
 protected:
     ETilePattern TilePattern;
+    // References to the tiles that are surrounding this tile
     FSurroundingTiles SurroundingTiles;
+
+    // A global variable that stores the first tile that was selected so that it can be compared against the second selected
+    static ATile* FirstSelectedTile;
 #pragma endregion Fields and Properties
 	
 public:
-    virtual void SetSelected();
+    // Set this tile as selected
+    virtual void SetAsSelected();
+    // Clear this tile of it's selected properties
+    virtual void RemoveAsSelected();
+    // Remove the Tile from the board
+    UFUNCTION(BlueprintCallable)
+    virtual void RemoveTile();
     // Remove the Tile from the board
     UFUNCTION(BlueprintCallable)
     virtual void SetPattern(ETilePattern NewPattern);
