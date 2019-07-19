@@ -46,7 +46,7 @@ void ATile::RemoveTile()
     Destroy();
 }
 
-void ATile::SetPattern(ETilePattern NewPattern)
+void ATile::SetPattern(UTexture2D* NewPattern)
 {
     TilePattern = NewPattern;
 }

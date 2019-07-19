@@ -4,15 +4,6 @@
 #include "TilePool.h"
 #include "Public/Tile.h"
 
-// Sets default values for this component's properties
-UTilePool::UTilePool()
-{
-	
-}
-
-/*
-Remove the Actor at the top of the pool stack
-*/
 ATile* UTilePool::Checkout()
 {
     if (Pool.Num() == 0)
@@ -39,14 +30,14 @@ void UTilePool::AddToPool(ATile* TileToAdd)
     Pool.Push(TileToAdd);
 }
 
-void UTilePool::InitializePool(uint8 PoolSize)
+void UTilePool::InitializePool(const TArray<UTexture2D*> Patterns, const uint8 TilesPerPattern)
 {
     if (!ensure(TileBP))
     {
         UE_LOG(LogTemp, Error, TEXT("[%s] : Tile Blueprint has not been set."), *GetName());
         return;
     }
-    for(uint8 i=0; i < PoolSize; ++i)
+    for(uint8 i=0; i < (Patterns.Num() * TilesPerPattern); ++i)
     {
         ATile* SpawnedTile = nullptr; 
         SpawnTile(SpawnedTile, FVector(100000.0f,100000.0f,100000.0f));
@@ -54,6 +45,8 @@ void UTilePool::InitializePool(uint8 PoolSize)
         if(SpawnedTile != nullptr)
         {
             AddToPool(SpawnedTile);
+            uint8 PatternIndex = i / TilesPerPattern;
+            SpawnedTile->SetPattern(Patterns[PatternIndex]);
         }
     }
 }

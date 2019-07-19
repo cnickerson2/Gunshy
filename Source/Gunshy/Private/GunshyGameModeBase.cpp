@@ -27,7 +27,13 @@ void AGunshyGameModeBase::BeginPlay()
         }
     }
 #endif
-
-    TilePool->InitializePool(TILES_TO_SPAWN);
+    if (Patterns.Num() == 0)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("[%s] : No Patterns have been added, so no tiles will be spawned"), *GetName());
+    }
+    else
+    {
+        TilePool->InitializePool(Patterns, TilesPerPattern);
+    }
 }
 

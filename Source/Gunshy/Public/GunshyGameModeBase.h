@@ -22,8 +22,11 @@ class GUNSHY_API AGunshyGameModeBase : public AGameModeBase
     virtual void BeginPlay() override;
 
 protected:
-    UPROPERTY(EditDefaultsOnly, Category="Tile Pool")
+    UPROPERTY(EditDefaultsOnly, Category="Tiles")
     UTilePool* TilePool = nullptr;
-    const uint8 TILES_TO_SPAWN = 144;
+    UPROPERTY(EditDefaultsOnly, Category="Tiles")
+    TArray<UTexture2D*> Patterns;
+    UPROPERTY(EditDefaultsOnly, Category="Tiles")
+    uint8 TilesPerPattern = 4;
 
 };

@@ -6,28 +6,36 @@
 #include "Components/ActorComponent.h"
 #include "TilePool.generated.h"
 
+/** Forward Declarations */
 class ATile;
 
+/**
+ * Defines the pool that stores the tiles of the game. 
+ * Can also be thought of as the bag where tiles are pulled from to create the pattern.
+ */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GUNSHY_API UTilePool : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
-	UTilePool();
-
-    ATile* Checkout();
-    void ReturnToPool(ATile* TileToReturn);
-
-    void AddToPool(ATile* TileToAdd);
-
-    void InitializePool(uint8 PoolSize);
-    void SpawnTile(ATile* OutSpawnedTile, const FVector& SpawnPosition);
-    void SpawnTile(ATile* OutSpawnedTile);
 private:
+    /** The container for all the tile actors */
     TArray<ATile*> Pool;
-
+    /** The Blueprint for the Tile that will be spawned in */
     UPROPERTY(EditDefaultsOnly, Category = "Setup")
     TSubclassOf<ATile> TileBP;
+
+public:	
+    /** Remove the Actor at the top of the pool stack */
+    ATile* Checkout();
+    /** Returns the Actor at the top of the pool stack */
+    void ReturnToPool(ATile* TileToReturn);
+    /** Adds the Actor at the top of the pool stack */
+    void AddToPool(ATile* TileToAdd);
+    /** Initialize the Pool by spawning the supplied amount of Tiles */
+    void InitializePool(const TArray<UTexture2D*> Patterns, const uint8 TilesPerPattern);
+    /** Spawn a Tile at the supplied position, and store it in the OutSpawnedTile */
+    void SpawnTile(ATile* OutSpawnedTile, const FVector& SpawnPosition);
+    /** Spawn a Tile at 0,0,0 and store it in the OutSpawnedTile */
+    void SpawnTile(ATile* OutSpawnedTile);
 };
