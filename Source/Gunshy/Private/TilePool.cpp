@@ -49,7 +49,7 @@ void UTilePool::InitializePool(uint8 PoolSize)
     for(uint8 i=0; i < PoolSize; ++i)
     {
         ATile* SpawnedTile = nullptr; 
-        SpawnTile(SpawnedTile);
+        SpawnTile(SpawnedTile, FVector(100000.0f,100000.0f,100000.0f));
 
         if(SpawnedTile != nullptr)
         {
@@ -66,6 +66,7 @@ void UTilePool::SpawnTile(ATile* OutSpawnedTile, const FVector& SpawnPosition)
         return;
     }
     OutSpawnedTile = GetWorld()->SpawnActor<ATile>(TileBP, SpawnPosition, FRotator::ZeroRotator);
+    OutSpawnedTile->SetFolderPath(TEXT("/Tiles"));
 }
 
 void UTilePool::SpawnTile(ATile* OutSpawnedTile)
