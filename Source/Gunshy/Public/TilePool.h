@@ -20,6 +20,7 @@ class GUNSHY_API UTilePool : public UActorComponent
 
 private:
     /** The container for all the tile actors */
+    UPROPERTY(VisibleAnywhere, Category="Tiles")
     TArray<ATile*> Pool;
     /** The Blueprint for the Tile that will be spawned in */
     UPROPERTY(EditDefaultsOnly, Category = "Setup")
@@ -35,7 +36,11 @@ public:
     /** Initialize the Pool by spawning the supplied amount of Tiles */
     void InitializePool(const TArray<UTexture2D*> Patterns, const uint8 TilesPerPattern);
     /** Spawn a Tile at the supplied position, and store it in the OutSpawnedTile */
-    void SpawnTile(ATile* OutSpawnedTile, const FVector& SpawnPosition);
+    void SpawnTile(ATile*& OutSpawnedTile, const FVector& SpawnPosition);
     /** Spawn a Tile at 0,0,0 and store it in the OutSpawnedTile */
-    void SpawnTile(ATile* OutSpawnedTile);
+    void SpawnTile(ATile*& OutSpawnedTile);
+    /** Shuffle the elements in the pool so that they come out in a random order */
+    void ShufflePool();
+    /** Returns the Names of all the items in the pool. */
+    virtual FString ToString() const;
 };

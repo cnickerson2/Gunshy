@@ -26,7 +26,7 @@ void UTilePool::AddToPool(ATile* TileToAdd)
         UE_LOG(LogTemp, Error, TEXT("[%s] Add: Added null tile."), *GetName());
         return;
     }
-
+    
     Pool.Push(TileToAdd);
 }
 
@@ -49,9 +49,10 @@ void UTilePool::InitializePool(const TArray<UTexture2D*> Patterns, const uint8 T
             SpawnedTile->SetPattern(Patterns[PatternIndex]);
         }
     }
+    ShufflePool();
 }
 
-void UTilePool::SpawnTile(ATile* OutSpawnedTile, const FVector& SpawnPosition)
+void UTilePool::SpawnTile(ATile*& OutSpawnedTile, const FVector& SpawnPosition)
 {
     if (!ensure(TileBP))
     {
@@ -62,8 +63,28 @@ void UTilePool::SpawnTile(ATile* OutSpawnedTile, const FVector& SpawnPosition)
     OutSpawnedTile->SetFolderPath(TEXT("/Tiles"));
 }
 
-void UTilePool::SpawnTile(ATile* OutSpawnedTile)
+void UTilePool::SpawnTile(ATile*& OutSpawnedTile)
 {
     SpawnTile(OutSpawnedTile, FVector::ZeroVector);
+}
+
+void UTilePool::ShufflePool()
+{
+    for(uint8 i = (Pool.Num()-1); i > 0; i--)
+    {
+        int index = (rand() % (i + 1));
+        Pool.Swap(index, i);
+    }
+}
+
+FString UTilePool::ToString() const
+{
+    FString TileString;
+    for(uint8 i = 0; i < Pool.Num(); ++i)
+    {
+        TileString.Append(*(Pool[i]->GetName()));
+        TileString.Append(TEXT(", "));
+    }
+    return TileString;
 }
 
