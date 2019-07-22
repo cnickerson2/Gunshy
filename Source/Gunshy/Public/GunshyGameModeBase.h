@@ -20,9 +20,11 @@ class GUNSHY_API AGunshyGameModeBase : public AGameModeBase
     AGunshyGameModeBase();
 
     virtual void BeginPlay() override;
+    UFUNCTION(BlueprintCallable, Category="Tiles")
+    virtual void InitializePool();
 
 protected:
-    UPROPERTY(EditDefaultsOnly, Category="Tiles")
+    UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category="Tiles")
     UTilePool* TilePool = nullptr;
     UPROPERTY(EditDefaultsOnly, Category="Tiles")
     TArray<UTexture2D*> Patterns;
