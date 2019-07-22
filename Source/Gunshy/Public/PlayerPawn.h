@@ -23,7 +23,13 @@ protected:
 
     // Default Player Camera
     UPROPERTY(Category = "Camera", EditAnywhere)
-        UCameraComponent * PlayerCamera = nullptr; // TODO: Figure out the bug here where VisibleAnywhere is allowing this to be edited...
+    UCameraComponent * PlayerCamera = nullptr; 
+
+#if PLATFORM_ANDROID || PLATFORM_IOS
+    // Gets the down state of the touch input
+     bool bIsCurrentlyPressed = false;
+#endif
+
 #pragma endregion Fields and Properties
 
 #pragma region Methods
@@ -38,9 +44,9 @@ protected:
     // Attempt to select a tile
     virtual void SelectAtClick();
     // Deproject the Mouse Position of the Player Controller and cast a ray downwards towards the objects below
-    bool RaycastFromMousePosition(const APlayerController * const OutPlayerController, FHitResult& OutHitResult) const;
+    bool RaycastFromMousePosition(FHitResult& OutHitResult) const;
     // Tell the tile that is passed in that it was selected
-    void InformTileOfSelection(ATile * const OutHitTile) const;
+    void InformTileOfSelection(ATile*& OutHitTile) const;
 
 #pragma endregion Methods
 };

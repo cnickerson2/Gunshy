@@ -25,14 +25,8 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void APlayerPawn::SelectAtClick()
 {
-    APlayerController* PlayerController = Cast<APlayerController>(GetController());
-    if (PlayerController == nullptr)
-    {
-        return;
-    }
-
     FHitResult HitResult;
-    bool bRaycastHitTile = RaycastFromMousePosition(PlayerController, HitResult);
+    bool bRaycastHitTile = RaycastFromMousePosition(HitResult);
 
     if(bRaycastHitTile)
     {
@@ -44,19 +38,26 @@ void APlayerPawn::SelectAtClick()
     }
 }
 
-bool APlayerPawn::RaycastFromMousePosition(const APlayerController * const OutPlayerController, FHitResult& OutHitResult) const
+bool APlayerPawn::RaycastFromMousePosition(FHitResult& OutHitResult) const
 {    
+    const APlayerController* PlayerController = Cast<APlayerController>(GetController());
+    if (PlayerController == nullptr)
+    {
+        return false;
+    }
+
     FVector RayStartingPosition, RayDirection;
     float MousePositionX, MousePositionY;
 
 #if PLATFORM_DESKTOP || PLATFORM_WINDOWS || PLATFORM_APPLE
-    OutPlayerController->GetMousePosition(MousePositionX, MousePositionY);
+    PlayerController->GetMousePosition(MousePositionX, MousePositionY);
+
 #elif PLATFORM_ANDROID || PLATFORM_IOS
-    bool bIsCurrentlyPressed; // Don't care as this is called only on an action down, so it's not doing anything other than being required by GetInputTouchState
-    OutPlayerController->GetInputTouchState(ETouchIndex::Touch1, MousePositionX, MousePositionY, bIsCurrentlyPressed);
+    PlayerController->GetInputTouchState(ETouchIndex::Touch1, MousePositionX, MousePositionY, bIsCurrentlyPressed);
+
 #endif
 
-    OutPlayerController->DeprojectScreenPositionToWorld(MousePositionX, MousePositionY, RayStartingPosition, RayDirection);
+    PlayerController->DeprojectScreenPositionToWorld(MousePositionX, MousePositionY, RayStartingPosition, RayDirection);
 
     // Cast a ray from the Click position downwards to see if you hit a tile
     return GetWorld()->LineTraceSingleByObjectType(
@@ -67,7 +68,7 @@ bool APlayerPawn::RaycastFromMousePosition(const APlayerController * const OutPl
     );
 }
 
-void APlayerPawn::InformTileOfSelection(ATile * const OutHitTile) const
+void APlayerPawn::InformTileOfSelection(ATile*& OutHitTile) const
 {
     OutHitTile->SetAsSelected();
 }
