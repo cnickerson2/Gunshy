@@ -28,6 +28,7 @@ private:
 
 public:	
     /** Remove the Actor at the top of the pool stack */
+    UFUNCTION(BlueprintCallable, Category = "Tiles")
     ATile* Checkout();
     /** Returns the Actor at the top of the pool stack */
     void ReturnToPool(ATile* TileToReturn);
