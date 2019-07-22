@@ -5,38 +5,38 @@
 
 ATile* ATile::FirstSelectedTile = nullptr;
 
-void ATile::SetAsSelected()
+void ATile::SetSelected()
 {
     if(IsAbleToBeSelected())
-    {
-        // TODO: Set the Tile's mesh to have a selection effect
-                
-        if(ATile::FirstSelectedTile != nullptr) // Check if there is another Selected tile
+    {        
+        if(ATile::FirstSelectedTile != nullptr) // Is there is already a selected tile?
         {
             if(ATile::FirstSelectedTile->TilePattern != this->TilePattern)
             {
-                // Invalid selection, clear both
-                this->RemoveAsSelected();
-                ATile::FirstSelectedTile->RemoveAsSelected();
+                this->ClearSelected();
+                ATile::FirstSelectedTile->ClearSelected();
             }
             else
             {
                 this->RemoveTile();
                 ATile::FirstSelectedTile->RemoveTile();
             }
-
-            // Reset
             ATile::FirstSelectedTile = nullptr;
         }
-        else // Else this is the first tile selected, set it
+        else
         {
-            UE_LOG(LogTemp, Warning, TEXT("[%s] : [%d]"), *GetName(), ATile::FirstSelectedTile);
             ATile::FirstSelectedTile = this;
+            AddSelectionEffect();
         }
     }
 }
 
-void ATile::RemoveAsSelected()
+void ATile::ClearSelected()
+{
+
+}
+
+void ATile::AddSelectionEffect()
 {
 
 }
@@ -53,18 +53,21 @@ void ATile::SetPattern(UTexture2D* NewPattern)
 
 bool ATile::IsAbleToBeSelected() const
 {
+    if(ATile::FirstSelectedTile == this)
+    {
+        return false;
+    }
+
     if (SurroundingTiles.TileOnTop)
     {
         return false;
     }
 
-    if (SurroundingTiles.TileToTheLeft == nullptr || SurroundingTiles.TileToTheRight == nullptr)
-    {
-        return true;
-    }
-    else
+    if (SurroundingTiles.TileToTheLeft != nullptr && SurroundingTiles.TileToTheRight != nullptr)
     {
         return false;
     }
+        
+    return true;
 }
 

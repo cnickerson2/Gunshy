@@ -57,18 +57,23 @@ bool APlayerPawn::RaycastFromMousePosition(FHitResult& OutHitResult) const
 
 #endif
 
-    PlayerController->DeprojectScreenPositionToWorld(MousePositionX, MousePositionY, RayStartingPosition, RayDirection);
-
-    // Cast a ray from the Click position downwards to see if you hit a tile
-    return GetWorld()->LineTraceSingleByObjectType(
-        OutHitResult,
-        RayStartingPosition,
-        RayStartingPosition + RayDirection * RAY_CAST_DISTANCE,
-        FCollisionObjectQueryParams(ECollisionChannel::ECC_GameTraceChannel1) // Tile object type
-    );
+    if(PlayerController->DeprojectScreenPositionToWorld(MousePositionX, MousePositionY, RayStartingPosition, RayDirection))
+    {
+        // Cast a ray from the Click position downwards to see if you hit a tile
+        return GetWorld()->LineTraceSingleByObjectType(
+            OutHitResult,
+            RayStartingPosition,
+            RayStartingPosition + RayDirection * RAY_CAST_DISTANCE,
+            FCollisionObjectQueryParams(ECollisionChannel::ECC_GameTraceChannel1) // Tile object type
+        );
+    }
+    else // Couldn't get a value
+    {
+        return false;
+    }
 }
 
 void APlayerPawn::InformTileOfSelection(ATile*& OutHitTile) const
 {
-    OutHitTile->SetAsSelected();
+    OutHitTile->SetSelected();
 }

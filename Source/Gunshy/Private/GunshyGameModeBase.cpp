@@ -15,6 +15,7 @@ void AGunshyGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
+    // Display the mouse on Computer
 #if PLATFORM_DESKTOP || PLATFORM_WINDOWS || PLATFORM_APPLE
     for (FConstPlayerControllerIterator PlayerControllerIterator = GetWorld()->GetPlayerControllerIterator(); PlayerControllerIterator; ++PlayerControllerIterator)
     {
@@ -30,15 +31,16 @@ void AGunshyGameModeBase::BeginPlay()
 }
 
 void AGunshyGameModeBase::InitializePool()
-{
+{    
+#if UE_BUILD_DEBUG
     if (Patterns.Num() == 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("[%s] : No Patterns have been added, so no tiles will be spawned"), *GetName());
+        UE_LOG(LogTemp, Error, TEXT("[%s] : No Patterns have been added, so no tiles will be spawned"), *GetName());
+        return;
     }
-    else
-    {
-        TilePool->InitializePool(Patterns, TilesPerPattern);
-    }
+#endif     
+
+    TilePool->InitializePool(Patterns, TilesPerPattern);    
 }
 
 

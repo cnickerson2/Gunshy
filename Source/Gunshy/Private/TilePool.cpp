@@ -14,16 +14,11 @@ ATile* UTilePool::Checkout()
     return Pool.Pop();
 }
 
-void UTilePool::ReturnToPool(ATile* TileToReturn)
-{
-    AddToPool(TileToReturn);
-}
-
 void UTilePool::AddToPool(ATile* TileToAdd)
 {
     if (TileToAdd == nullptr)
     {
-        UE_LOG(LogTemp, Error, TEXT("[%s] Add: Added null tile."), *GetName());
+        UE_LOG(LogTemp, Error, TEXT("[%s] AddToPool: Attempted to add null tile."), *GetName());
         return;
     }
     
@@ -34,9 +29,10 @@ void UTilePool::InitializePool(const TArray<UTexture2D*> Patterns, const uint8 T
 {
     if (!ensure(TileBP))
     {
-        UE_LOG(LogTemp, Error, TEXT("[%s] : Tile Blueprint has not been set."), *GetName());
+        UE_LOG(LogTemp, Error, TEXT("[%s] InitializePool: Tile Blueprint has not been set."), *GetName());
         return;
     }
+
     for(uint8 i=0; i < (Patterns.Num() * TilesPerPattern); ++i)
     {
         ATile* SpawnedTile = nullptr; 
@@ -49,6 +45,7 @@ void UTilePool::InitializePool(const TArray<UTexture2D*> Patterns, const uint8 T
             SpawnedTile->SetPattern(Patterns[PatternIndex]);
         }
     }
+
     ShufflePool();
 }
 
@@ -61,11 +58,6 @@ void UTilePool::SpawnTile(ATile*& OutSpawnedTile, const FVector& SpawnPosition)
     }
     OutSpawnedTile = GetWorld()->SpawnActor<ATile>(TileBP, SpawnPosition, FRotator::ZeroRotator);
     OutSpawnedTile->SetFolderPath(TEXT("/Tiles"));
-}
-
-void UTilePool::SpawnTile(ATile*& OutSpawnedTile)
-{
-    SpawnTile(OutSpawnedTile, FVector::ZeroVector);
 }
 
 void UTilePool::ShufflePool()
