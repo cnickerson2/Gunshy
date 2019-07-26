@@ -2,6 +2,7 @@
 
 
 #include "Tile.h"
+//#include "DrawDebugHelpers.h"
 
 ATile* ATile::FirstSelectedTile = nullptr;
 
@@ -83,7 +84,7 @@ void ATile::SetRemainingSurroundingTiles()
             }
             else
             {
-                
+                UE_LOG(LogTemp, Error, TEXT("[%s] SetRemainingSurroundingTiles: TileToTheLeft was null, despite FindTile returning true"), *GetName());
             }
         }
     }
@@ -97,7 +98,7 @@ void ATile::SetRemainingSurroundingTiles()
             }
             else
             {
-
+                UE_LOG(LogTemp, Error, TEXT("[%s] SetRemainingSurroundingTiles: TileToTheRight was null, despite FindTile returning true"), *GetName());
             }
         }
     }
@@ -120,18 +121,25 @@ void ATile::SetRightSurroundingTile(ATile* RightTile)
 bool ATile::FindTile(ATile*& OutHitTile, FVector RaycastDirection)
 {
     FHitResult HitResult;
-    bool bWasHit = GetWorld()->LineTraceSingleByObjectType
+    FVector RaycastEndPosition = FVector(RaycastDirection.X * MAX_RAYCAST_DISTANCE.X, RaycastDirection.Y * MAX_RAYCAST_DISTANCE.Y, RaycastDirection.Z * MAX_RAYCAST_DISTANCE.Z);
+    bool bWasHit = GetWorld()->SweepSingleByObjectType
     (
         HitResult,
         this->GetActorLocation(),
-        this->GetActorLocation() + RaycastDirection * MAX_RAYCAST_DISTANCE,
-        FCollisionObjectQueryParams(ECollisionChannel::ECC_GameTraceChannel1) // Tile object type
+        this->GetActorLocation() + RaycastEndPosition,
+        FQuat::Identity,
+        FCollisionObjectQueryParams(ECollisionChannel::ECC_GameTraceChannel1), // Tile object type
+        FCollisionShape::MakeSphere(RAYCAST_SPHERE_RADIUS)
     );
+
+    //DrawDebugSphere(GetWorld(), this->GetActorLocation() + RaycastEndPosition, RAYCAST_SPHERE_RADIUS, 0, bWasHit ? FColor::Green : FColor::Red, true, 100);
 
     if(bWasHit)
     {
+        
         OutHitTile = Cast<ATile>(HitResult.GetActor());
     }
     return bWasHit;
 }
+
 

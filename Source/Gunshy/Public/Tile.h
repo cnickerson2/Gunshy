@@ -43,7 +43,8 @@ protected:
     /** A global variable that stores the first tile that was selected so that it can be compared against the second selected */
     static ATile* FirstSelectedTile;
 
-    const float MAX_RAYCAST_DISTANCE = 3.2f;
+    const FVector MAX_RAYCAST_DISTANCE = FVector(2.4f, 3.2f, 1.6f); // Dimensions of the tile allow for viewing exactly one tile away
+    const float RAYCAST_SPHERE_RADIUS = 0.7f;
 
     /** The pattern that is displayed as a decal on the top of the tile */
     UTexture2D* TilePattern = nullptr;
