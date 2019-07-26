@@ -43,6 +43,8 @@ protected:
     /** A global variable that stores the first tile that was selected so that it can be compared against the second selected */
     static ATile* FirstSelectedTile;
 
+    const float MAX_RAYCAST_DISTANCE = 3.2f;
+
     /** The pattern that is displayed as a decal on the top of the tile */
     UTexture2D* TilePattern = nullptr;
     /** Reference to the tiles that are surrounding this tile */
@@ -64,4 +66,15 @@ public:
     void SetPattern(UTexture2D* NewPattern);
     /** Returns true if the there is no tile on top, and no tile to at least one side */
     bool IsAbleToBeSelected() const;
+    /** Set surrounding tiles that have not already been set */
+    UFUNCTION(BlueprintCallable)
+    void SetRemainingSurroundingTiles();
+    /** Set tile to the left */
+    void SetLeftSurroundingTile(ATile* LeftTile);
+    /** Set tile to the right */
+    void SetRightSurroundingTile(ATile* RightTile);
+
+protected:
+    /** Sends out a raycast in the supplied direction to see if there is a tile that is hit */
+    bool FindTile(ATile*& OutHitTile, FVector RaycastDirection);
 };

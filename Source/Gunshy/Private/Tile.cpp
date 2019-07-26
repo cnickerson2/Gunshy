@@ -71,3 +71,67 @@ bool ATile::IsAbleToBeSelected() const
     return true;
 }
 
+void ATile::SetRemainingSurroundingTiles()
+{
+    if (!SurroundingTiles.TileToTheLeft)
+    {
+        if(FindTile(SurroundingTiles.TileToTheLeft, FVector::BackwardVector))
+        {
+            if(SurroundingTiles.TileToTheLeft)
+            {
+                SurroundingTiles.TileToTheLeft->SetRightSurroundingTile(this);
+            }
+            else
+            {
+                
+            }
+        }
+    }
+    if (!SurroundingTiles.TileToTheRight)
+    {
+        if(FindTile(SurroundingTiles.TileToTheRight, FVector::ForwardVector))
+        {
+            if (SurroundingTiles.TileToTheRight)
+            {
+                SurroundingTiles.TileToTheRight->SetLeftSurroundingTile(this);
+            }
+            else
+            {
+
+            }
+        }
+    }
+    if (!SurroundingTiles.TileOnTop)
+    {
+        FindTile(SurroundingTiles.TileOnTop, FVector::UpVector);
+    }
+}
+
+void ATile::SetLeftSurroundingTile(ATile* LeftTile)
+{
+    SurroundingTiles.TileToTheLeft = LeftTile;
+}
+
+void ATile::SetRightSurroundingTile(ATile* RightTile)
+{
+    SurroundingTiles.TileToTheRight = RightTile;
+}
+
+bool ATile::FindTile(ATile*& OutHitTile, FVector RaycastDirection)
+{
+    FHitResult HitResult;
+    bool bWasHit = GetWorld()->LineTraceSingleByObjectType
+    (
+        HitResult,
+        this->GetActorLocation(),
+        this->GetActorLocation() + RaycastDirection * MAX_RAYCAST_DISTANCE,
+        FCollisionObjectQueryParams(ECollisionChannel::ECC_GameTraceChannel1) // Tile object type
+    );
+
+    if(bWasHit)
+    {
+        OutHitTile = Cast<ATile>(HitResult.GetActor());
+    }
+    return bWasHit;
+}
+
