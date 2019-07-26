@@ -16,10 +16,18 @@ USTRUCT(BlueprintType)
 struct FSurroundingTiles
 {
     GENERATED_BODY()
-/// Fields and Properties
-    ATile* TileToTheLeft = nullptr;
-    ATile* TileToTheRight = nullptr;
-    ATile* TileOnTop = nullptr;
+    /// Fields and Properties
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Surrounding Tiles")
+    ATile* TileToTheLeft;
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Surrounding Tiles")
+    ATile* TileToTheRight;
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Surrounding Tiles")
+    ATile* TileOnTop;
+
+    FSurroundingTiles() : TileToTheLeft(nullptr), TileToTheRight(nullptr), TileOnTop(nullptr)
+    {
+
+    }
 };
 
 /**
@@ -38,6 +46,7 @@ protected:
     /** The pattern that is displayed as a decal on the top of the tile */
     UTexture2D* TilePattern = nullptr;
     /** Reference to the tiles that are surrounding this tile */
+    UPROPERTY(VisibleAnywhere, Category = "Surrounding Tiles")
     FSurroundingTiles SurroundingTiles;
 
 ///Methods
