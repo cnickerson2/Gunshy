@@ -4,28 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Engine/StaticMeshActor.h"
+#include "Public/SurroundingTiles.h"
 #include "Tile.generated.h"
 
 /// Forward Declarations
 class UTexture2D;
-
-/**
- * A collection of the tiles that are surrounding this object
- */
-USTRUCT(BlueprintType)
-struct FSurroundingTiles
-{
-    GENERATED_BODY()
-    /// Fields and Properties
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Surrounding Tiles")
-    ATile* TileToTheLeft;
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Surrounding Tiles")
-    ATile* TileToTheRight;
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Surrounding Tiles")
-    ATile* TileOnTop;
-
-    FSurroundingTiles() : TileToTheLeft(nullptr), TileToTheRight(nullptr), TileOnTop(nullptr){}
-};
 
 /**
  * Defines a Tile that can be selected by the player and add to the score
@@ -56,10 +39,6 @@ public:
     /** Set surrounding tiles that have not already been set */
     UFUNCTION(BlueprintCallable)
     void SetRemainingSurroundingTiles();
-    /** Set tile to the left */
-    void SetLeftSurroundingTile(ATile* LeftTile);
-    /** Set tile to the right */
-    void SetRightSurroundingTile(ATile* RightTile);
     /** Set this tile as selected */
     void SetSelected();
     /** Clear this tile of it's selected properties */
@@ -67,14 +46,11 @@ public:
 
 protected:
     /** Sends out a raycast in the supplied direction to see if there is a tile that is hit */
-    bool FindTile(ATile*& OutHitTile, FVector RaycastDirection);
+    bool FindTiles(TArray<ATile*>& OutTilesArray, FVector RaycastDirection);
     /** Remove the Tile from the board */
-    UFUNCTION(BlueprintCallable)
     void RemoveTile();
     /** Add a glowing effect to let the player know which tile has been selected */
     void AddSelectionEffect();
     /** Returns true if the there is no tile on top, and no tile to at least one side */
     bool IsAbleToBeSelected() const;
-    /** Check if the object is still valid */
-    bool IsValid(UObject* Obj) const;
 };

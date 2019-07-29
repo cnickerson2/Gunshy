@@ -2,7 +2,6 @@
 
 
 #include "Tile.h"
-//#include "DrawDebugHelpers.h"
 
 ATile* ATile::FirstSelectedTile = nullptr;
 
@@ -13,40 +12,9 @@ void ATile::SetPattern(UTexture2D* NewPattern)
 
 void ATile::SetRemainingSurroundingTiles()
 {
-    if (!SurroundingTiles.TileToTheLeft)
-    {
-        if(FindTile(SurroundingTiles.TileToTheLeft, FVector::BackwardVector))
-        {
-            if(SurroundingTiles.TileToTheLeft)
-            {
-                SurroundingTiles.TileToTheLeft->SetRightSurroundingTile(this);
-            }
-        }
-    }
-    if (!SurroundingTiles.TileToTheRight)
-    {
-        if(FindTile(SurroundingTiles.TileToTheRight, FVector::ForwardVector))
-        {
-            if (SurroundingTiles.TileToTheRight)
-            {
-                SurroundingTiles.TileToTheRight->SetLeftSurroundingTile(this);
-            }
-        }
-    }
-    if (!SurroundingTiles.TileOnTop)
-    {
-        FindTile(SurroundingTiles.TileOnTop, FVector::UpVector);
-    }
-}
-
-void ATile::SetLeftSurroundingTile(ATile* LeftTile)
-{
-    SurroundingTiles.TileToTheLeft = LeftTile;
-}
-
-void ATile::SetRightSurroundingTile(ATile* RightTile)
-{
-    SurroundingTiles.TileToTheRight = RightTile;
+    FindTiles(SurroundingTiles.TilesToTheLeft, FVector::BackwardVector);    
+    FindTiles(SurroundingTiles.TilesToTheRight, FVector::ForwardVector);
+    FindTiles(SurroundingTiles.TilesOnTop, FVector::UpVector);    
 }
 
 void ATile::SetSelected()
@@ -87,13 +55,13 @@ void ATile::ClearSelected()
 
 }
 
-bool ATile::FindTile(ATile*& OutHitTile, FVector RaycastDirection)
+bool ATile::FindTiles(TArray<ATile*>& OutTilesArray, FVector RaycastDirection)
 {
-    FHitResult HitResult;
+    TArray<FHitResult> HitResults;
     FVector RaycastEndPosition = FVector(RaycastDirection.X * MAX_RAYCAST_DISTANCE.X, RaycastDirection.Y * MAX_RAYCAST_DISTANCE.Y, RaycastDirection.Z * MAX_RAYCAST_DISTANCE.Z);
-    bool bWasHit = GetWorld()->SweepSingleByObjectType
+    bool bWasHit = GetWorld()->SweepMultiByObjectType
     (
-        HitResult,
+        HitResults,
         this->GetActorLocation(),
         this->GetActorLocation() + RaycastEndPosition,
         FQuat::Identity,
@@ -103,7 +71,10 @@ bool ATile::FindTile(ATile*& OutHitTile, FVector RaycastDirection)
 
     if(bWasHit)
     {        
-        OutHitTile = Cast<ATile>(HitResult.GetActor());
+        for(int i=0; i < HitResults.Num(); ++i)
+        {
+            OutTilesArray.AddUnique(Cast<ATile>(HitResults[i].GetActor()));
+        }
     }
     return bWasHit;
 }
@@ -125,32 +96,15 @@ bool ATile::IsAbleToBeSelected() const
         return false;
     }
 
-    if (IsValid(SurroundingTiles.TileOnTop))
+    if (SurroundingTiles.IsThereATileOnTop())
     {
         return false;
     }
 
-    if (IsValid(SurroundingTiles.TileToTheLeft) && IsValid(SurroundingTiles.TileToTheRight))
+    if (SurroundingTiles.IsThereATileToTheLeft() && SurroundingTiles.IsThereATileToTheRight())
     {
         return false;
     }
 
-    return true;
-}
-
-bool ATile::IsValid(UObject* Obj) const
-{
-    if (!Obj)
-    {
-        return false;
-    }
-    if (!Obj->IsValidLowLevel())
-    {
-        return false;
-    }
-    if (Obj->IsPendingKill())
-    {
-        return false;
-    }
     return true;
 }
