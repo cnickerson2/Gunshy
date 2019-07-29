@@ -72,6 +72,14 @@ void ATile::SetSelected()
             AddSelectionEffect();
         }
     }
+    else
+    {
+        if (ATile::FirstSelectedTile != nullptr)
+        {
+            ATile::FirstSelectedTile->ClearSelected();
+        }
+        ATile::FirstSelectedTile = nullptr;
+    }
 }
 
 void ATile::ClearSelected()
