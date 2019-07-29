@@ -11,26 +11,6 @@ void ATile::SetPattern(UTexture2D* NewPattern)
     TilePattern = NewPattern;
 }
 
-bool ATile::IsAbleToBeSelected() const
-{
-    if(ATile::FirstSelectedTile == this)
-    {
-        return false;
-    }
-
-    if (SurroundingTiles.TileOnTop)
-    {
-        return false;
-    }
-
-    if (SurroundingTiles.TileToTheLeft != nullptr && SurroundingTiles.TileToTheRight != nullptr)
-    {
-        return false;
-    }
-        
-    return true;
-}
-
 void ATile::SetRemainingSurroundingTiles()
 {
     if (!SurroundingTiles.TileToTheLeft)
@@ -130,3 +110,39 @@ void ATile::AddSelectionEffect()
 
 }
 
+bool ATile::IsAbleToBeSelected() const
+{
+    if (ATile::FirstSelectedTile == this)
+    {
+        return false;
+    }
+
+    if (IsValid(SurroundingTiles.TileOnTop))
+    {
+        return false;
+    }
+
+    if (IsValid(SurroundingTiles.TileToTheLeft) && IsValid(SurroundingTiles.TileToTheRight))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ATile::IsValid(UObject* Obj) const
+{
+    if (!Obj)
+    {
+        return false;
+    }
+    if (!Obj->IsValidLowLevel())
+    {
+        return false;
+    }
+    if (Obj->IsPendingKill())
+    {
+        return false;
+    }
+    return true;
+}
