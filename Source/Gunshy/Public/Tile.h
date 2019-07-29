@@ -24,10 +24,7 @@ struct FSurroundingTiles
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Surrounding Tiles")
     ATile* TileOnTop;
 
-    FSurroundingTiles() : TileToTheLeft(nullptr), TileToTheRight(nullptr), TileOnTop(nullptr)
-    {
-
-    }
+    FSurroundingTiles() : TileToTheLeft(nullptr), TileToTheRight(nullptr), TileOnTop(nullptr){}
 };
 
 /**
@@ -54,19 +51,8 @@ protected:
 
 ///Methods
 public:
-    /** Set this tile as selected */
-    void SetSelected();
-    /** Clear this tile of it's selected properties */
-    void ClearSelected();
-    /** Add a glowing effect to let the player know which tile has been selected */
-    void AddSelectionEffect();
-    /** Remove the Tile from the board */
-    UFUNCTION(BlueprintCallable)
-    void RemoveTile();
     /** Puts the decal pattern on the Tile mesh */
     void SetPattern(UTexture2D* NewPattern);
-    /** Returns true if the there is no tile on top, and no tile to at least one side */
-    bool IsAbleToBeSelected() const;
     /** Set surrounding tiles that have not already been set */
     UFUNCTION(BlueprintCallable)
     void SetRemainingSurroundingTiles();
@@ -74,8 +60,21 @@ public:
     void SetLeftSurroundingTile(ATile* LeftTile);
     /** Set tile to the right */
     void SetRightSurroundingTile(ATile* RightTile);
+    /** Set this tile as selected */
+    void SetSelected();
+    /** Clear this tile of it's selected properties */
+    void ClearSelected();
 
 protected:
     /** Sends out a raycast in the supplied direction to see if there is a tile that is hit */
     bool FindTile(ATile*& OutHitTile, FVector RaycastDirection);
+    /** Remove the Tile from the board */
+    UFUNCTION(BlueprintCallable)
+    void RemoveTile();
+    /** Add a glowing effect to let the player know which tile has been selected */
+    void AddSelectionEffect();
+    /** Returns true if the there is no tile on top, and no tile to at least one side */
+    bool IsAbleToBeSelected() const;
+    /** Check if the object is still valid */
+    bool IsValid(UObject* Obj) const;
 };

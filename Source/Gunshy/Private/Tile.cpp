@@ -6,47 +6,6 @@
 
 ATile* ATile::FirstSelectedTile = nullptr;
 
-void ATile::SetSelected()
-{
-    if(IsAbleToBeSelected())
-    {        
-        if(ATile::FirstSelectedTile != nullptr) // Is there is already a selected tile?
-        {
-            if(ATile::FirstSelectedTile->TilePattern != this->TilePattern)
-            {
-                this->ClearSelected();
-                ATile::FirstSelectedTile->ClearSelected();
-            }
-            else
-            {
-                this->RemoveTile();
-                ATile::FirstSelectedTile->RemoveTile();
-            }
-            ATile::FirstSelectedTile = nullptr;
-        }
-        else
-        {
-            ATile::FirstSelectedTile = this;
-            AddSelectionEffect();
-        }
-    }
-}
-
-void ATile::ClearSelected()
-{
-
-}
-
-void ATile::AddSelectionEffect()
-{
-
-}
-
-void ATile::RemoveTile()
-{
-    Destroy();
-}
-
 void ATile::SetPattern(UTexture2D* NewPattern)
 {
     TilePattern = NewPattern;
@@ -82,10 +41,6 @@ void ATile::SetRemainingSurroundingTiles()
             {
                 SurroundingTiles.TileToTheLeft->SetRightSurroundingTile(this);
             }
-            else
-            {
-                UE_LOG(LogTemp, Error, TEXT("[%s] SetRemainingSurroundingTiles: TileToTheLeft was null, despite FindTile returning true"), *GetName());
-            }
         }
     }
     if (!SurroundingTiles.TileToTheRight)
@@ -95,10 +50,6 @@ void ATile::SetRemainingSurroundingTiles()
             if (SurroundingTiles.TileToTheRight)
             {
                 SurroundingTiles.TileToTheRight->SetLeftSurroundingTile(this);
-            }
-            else
-            {
-                UE_LOG(LogTemp, Error, TEXT("[%s] SetRemainingSurroundingTiles: TileToTheRight was null, despite FindTile returning true"), *GetName());
             }
         }
     }
@@ -118,6 +69,36 @@ void ATile::SetRightSurroundingTile(ATile* RightTile)
     SurroundingTiles.TileToTheRight = RightTile;
 }
 
+void ATile::SetSelected()
+{
+    if (IsAbleToBeSelected())
+    {
+        if (ATile::FirstSelectedTile != nullptr) // Is there is already a selected tile?
+        {
+            if (ATile::FirstSelectedTile->TilePattern != this->TilePattern)
+            {
+                ATile::FirstSelectedTile->ClearSelected();
+            }
+            else
+            {
+                this->RemoveTile();
+                ATile::FirstSelectedTile->RemoveTile();
+            }
+            ATile::FirstSelectedTile = nullptr;
+        }
+        else
+        {
+            ATile::FirstSelectedTile = this;
+            AddSelectionEffect();
+        }
+    }
+}
+
+void ATile::ClearSelected()
+{
+
+}
+
 bool ATile::FindTile(ATile*& OutHitTile, FVector RaycastDirection)
 {
     FHitResult HitResult;
@@ -132,14 +113,20 @@ bool ATile::FindTile(ATile*& OutHitTile, FVector RaycastDirection)
         FCollisionShape::MakeSphere(RAYCAST_SPHERE_RADIUS)
     );
 
-    //DrawDebugSphere(GetWorld(), this->GetActorLocation() + RaycastEndPosition, RAYCAST_SPHERE_RADIUS, 0, bWasHit ? FColor::Green : FColor::Red, true, 100);
-
     if(bWasHit)
-    {
-        
+    {        
         OutHitTile = Cast<ATile>(HitResult.GetActor());
     }
     return bWasHit;
 }
 
+void ATile::RemoveTile()
+{
+    Destroy();
+}
+
+void ATile::AddSelectionEffect()
+{
+
+}
 
